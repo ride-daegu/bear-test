@@ -17,7 +17,6 @@
             overflow: hidden;
         }
         
-        /* 안내 UI */
         .info-panel {
             position: fixed;
             top: 20px;
@@ -48,35 +47,13 @@
             border-top: 1px solid rgba(255,255,255,0.3);
         }
         
-        .vr-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            z-index: 999;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .vr-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-        }
-        
-        /* 모바일 최적화 */
         @media (max-width: 600px) {
             .info-panel {
                 top: 10px;
                 left: 10px;
                 right: 10px;
                 max-width: none;
+                padding: 15px;
             }
             
             .info-panel h1 {
@@ -102,35 +79,42 @@
     <a-scene 
         vr-mode-ui="enabled: true"
         embedded
-        renderer="antialias: true; colorManagement: true; physicallyCorrectLights: true"
+        renderer="antialias: true; colorManagement: true;"
     >
         <!-- 에셋 관리 -->
         <a-assets timeout="30000">
             <!-- 
-                ⚠️ 중요: bear_face.glb 파일을 이 HTML 파일과 같은 폴더에 넣으세요!
-                또는 아래 src 경로를 실제 파일 위치로 수정하세요.
+                ⚠️ bear_face.glb 파일을 이 HTML과 같은 폴더에 넣으세요!
             -->
             <a-asset-item id="bear-model" src="./bear_face.glb"></a-asset-item>
         </a-assets>
         
-        <!-- 하늘/배경 -->
+        <!-- 하늘/배경 - 그라데이션 효과 -->
         <a-sky color="#87CEEB"></a-sky>
         
-        <!-- 바닥 -->
+        <!-- 바닥 - 잔디 -->
         <a-circle 
             rotation="-90 0 0" 
-            radius="10" 
+            radius="15" 
             color="#7CBA6D"
             position="0 -1 0"
         ></a-circle>
         
-        <!-- 그리드 (선택적) -->
-        <a-entity
-            geometry="primitive: plane; width: 20; height: 20"
-            material="src: #grid; repeat: 20 20; transparent: true; opacity: 0.3"
+        <!-- 바닥 장식 - 동심원 -->
+        <a-ring
             rotation="-90 0 0"
-            position="0 -0.99 0"
-        ></a-entity>
+            radius-inner="2"
+            radius-outer="2.1"
+            color="#5a9a4d"
+            position="0 -0.99 -3"
+        ></a-ring>
+        <a-ring
+            rotation="-90 0 0"
+            radius-inner="3"
+            radius-outer="3.1"
+            color="#5a9a4d"
+            position="0 -0.99 -3"
+        ></a-ring>
         
         <!-- 🐻 곰돌이 모델 -->
         <a-entity
@@ -143,11 +127,11 @@
         </a-entity>
         
         <!-- 조명 -->
-        <a-light type="ambient" color="#ffffff" intensity="0.5"></a-light>
+        <a-light type="ambient" color="#ffffff" intensity="0.6"></a-light>
         <a-light type="directional" color="#ffffff" intensity="0.8" position="2 4 -2"></a-light>
-        <a-light type="directional" color="#ffeedd" intensity="0.4" position="-2 2 2"></a-light>
+        <a-light type="directional" color="#ffeedd" intensity="0.3" position="-2 2 2"></a-light>
         
-        <!-- 카메라 (오빗 컨트롤 포함) -->
+        <!-- 카메라 -->
         <a-entity id="camera-rig" position="0 1.6 0">
             <a-camera
                 look-controls="enabled: false"
@@ -161,43 +145,36 @@
                     dampingFactor: 0.1;
                     rotateSpeed: 0.5;
                     zoomSpeed: 0.5;
-                    autoRotate: false;
                 "
             ></a-camera>
         </a-entity>
         
-        <!-- VR 컨트롤러 (VR 모드에서 활성화) -->
+        <!-- VR 컨트롤러 -->
         <a-entity laser-controls="hand: left"></a-entity>
         <a-entity laser-controls="hand: right"></a-entity>
         
     </a-scene>
     
-    <!-- 모델 로딩 실패시 대체 표시 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const scene = document.querySelector('a-scene');
             const bear = document.querySelector('#bear');
             
-            // 모델 로딩 상태 확인
+            // 모델 로딩 실패시 대체 곰돌이 생성
             bear.addEventListener('model-error', function(e) {
-                console.error('모델 로딩 실패:', e);
-                
-                // 대체 도형으로 곰돌이 표시
+                console.warn('GLB 모델 로딩 실패, 대체 곰돌이를 생성합니다.');
                 createFallbackBear();
             });
             
-            // 씬 로드 완료
             scene.addEventListener('loaded', function() {
                 console.log('🐻 VR 씬이 로드되었습니다!');
             });
         });
         
-        // GLB 파일이 없을 경우 기본 도형으로 곰돌이 생성
         function createFallbackBear() {
             const bear = document.querySelector('#bear');
             bear.removeAttribute('gltf-model');
             
-            // 기본 도형으로 곰돌이 만들기
             bear.innerHTML = `
                 <!-- 얼굴 -->
                 <a-sphere color="#8B4513" radius="0.5" position="0 0 0"></a-sphere>
@@ -228,8 +205,6 @@
                 <a-sphere color="#FFB6C1" radius="0.06" position="-0.3 -0.1 -0.35"></a-sphere>
                 <a-sphere color="#FFB6C1" radius="0.06" position="0.3 -0.1 -0.35"></a-sphere>
             `;
-            
-            console.log('대체 곰돌이가 생성되었습니다!');
         }
     </script>
 </body>
