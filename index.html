@@ -27,6 +27,11 @@
     </div>
 
     <a-scene>
+        <!-- 에셋 -->
+        <a-assets>
+            <a-asset-item id="bear-model" src="./bear_face.glb"></a-asset-item>
+        </a-assets>
+
         <!-- 하늘 -->
         <a-sky color="#87CEEB"></a-sky>
         
@@ -39,53 +44,21 @@
             position="0 0 0">
         </a-plane>
         
-        <!-- 곰돌이 -->
-        <a-entity id="bear" position="0 1.2 -3" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000">
-            
-            <!-- 얼굴 (머리) -->
-            <a-sphere color="#8B4513" radius="0.6" position="0 0 0"></a-sphere>
-            
-            <!-- 왼쪽 귀 외부 -->
-            <a-sphere color="#8B4513" radius="0.18" position="-0.42 0.48 0"></a-sphere>
-            <!-- 왼쪽 귀 내부 -->
-            <a-sphere color="#FFB6C1" radius="0.1" position="-0.42 0.48 -0.1"></a-sphere>
-            
-            <!-- 오른쪽 귀 외부 -->
-            <a-sphere color="#8B4513" radius="0.18" position="0.42 0.48 0"></a-sphere>
-            <!-- 오른쪽 귀 내부 -->
-            <a-sphere color="#FFB6C1" radius="0.1" position="0.42 0.48 -0.1"></a-sphere>
-            
-            <!-- 주둥이 -->
-            <a-sphere color="#D2B48C" radius="0.25" position="0 -0.15 -0.5"></a-sphere>
-            
-            <!-- 코 -->
-            <a-sphere color="#1a1a1a" radius="0.08" position="0 0 -0.7"></a-sphere>
-            
-            <!-- 왼쪽 눈 흰자 -->
-            <a-sphere color="#FFFFFF" radius="0.1" position="-0.2 0.15 -0.5"></a-sphere>
-            <!-- 왼쪽 눈동자 -->
-            <a-sphere color="#000000" radius="0.05" position="-0.2 0.15 -0.58"></a-sphere>
-            
-            <!-- 오른쪽 눈 흰자 -->
-            <a-sphere color="#FFFFFF" radius="0.1" position="0.2 0.15 -0.5"></a-sphere>
-            <!-- 오른쪽 눈동자 -->
-            <a-sphere color="#000000" radius="0.05" position="0.2 0.15 -0.58"></a-sphere>
-            
-            <!-- 왼쪽 볼 -->
-            <a-sphere color="#FFB6C1" radius="0.08" position="-0.35 -0.1 -0.45"></a-sphere>
-            <!-- 오른쪽 볼 -->
-            <a-sphere color="#FFB6C1" radius="0.08" position="0.35 -0.1 -0.45"></a-sphere>
-            
-            <!-- 입 (작은 타원) -->
-            <a-sphere color="#1a1a1a" radius="0.03" scale="2 1 1" position="0 -0.25 -0.6"></a-sphere>
-            
-        </a-entity>
+        <!-- Blender 곰돌이 모델 -->
+        <a-entity
+            id="bear"
+            gltf-model="#bear-model"
+            position="0 1.5 -3"
+            scale="1 1 1"
+            rotation="0 180 0"
+            animation="property: rotation; from: 0 180 0; to: 0 540 0; loop: true; dur: 10000"
+        ></a-entity>
         
         <!-- 조명 -->
         <a-light type="ambient" intensity="0.5"></a-light>
         <a-light type="directional" intensity="0.8" position="1 2 1"></a-light>
         
-        <!-- 카메라 (기본 설정) -->
+        <!-- 카메라 -->
         <a-camera position="0 1.6 2" look-controls wasd-controls></a-camera>
         
     </a-scene>
